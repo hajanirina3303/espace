@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DonObjet{% endblock %}
+
+{% block body %}
+    <h1>DonObjet</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ don_objet.id }}</td>
+            </tr>
+            <tr>
+                <th>DateObjet</th>
+                <td>{{ don_objet.dateObjet ? don_objet.dateObjet|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>NomDonnateur</th>
+                <td>{{ don_objet.nomDonnateur }}</td>
+            </tr>
+            <tr>
+                <th>NumeroPhone</th>
+                <td>{{ don_objet.numeroPhone }}</td>
+            </tr>
+            <tr>
+                <th>Addresse</th>
+                <td>{{ don_objet.addresse }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('don_objet_index') }}">back to list</a>
+
+    <a href="{{ path('don_objet_edit', {'id': don_objet.id}) }}">edit</a>
+
+    {{ include('don_objet/_delete_form.html.twig') }}
+{% endblock %}

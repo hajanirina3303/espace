@@ -1,0 +1,9 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    globals:
+        userService: '@App\Service\UserService'
+        mouvementService: '@App\Service\MouvementService'
+
+when@test:
+    twig:
+        strict_variables: true

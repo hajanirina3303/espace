@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Don{% endblock %}
+
+{% block body %}
+    <h1>Don</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Nomdonnateur</th>
+                <td>{{ don.nomdonnateur }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('don_index') }}">back to list</a>
+
+    <a href="{{ path('don_edit', {'iddon': don.iddon}) }}">edit</a>
+
+    {{ include('don/_delete_form.html.twig') }}
+{% endblock %}

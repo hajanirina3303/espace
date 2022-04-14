@@ -1,0 +1,457 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	bilan
+{% endblock %}
+
+{% block body %}
+
+	{{ form_start(form_filtre,{attr: {class : 'col-12'} }) }}
+			<div class="col-12">
+				<div class="row">			
+					<div class="col-2">{{ form_label(form_filtre.type) }}{{ form_widget(form_filtre.type, []) }}</div>
+					<div class="col-2" id="mensuel">{{ form_label(form_filtre.mensuel) }}{{ form_widget(form_filtre.mensuel) }}</div>
+					<div class="col-2" id="trimestriel">{{ form_label(form_filtre.trimestriel) }}{{ form_widget(form_filtre.trimestriel) }}</div>
+					<div class="col-2" id="semestre">{{ form_label(form_filtre.semestre) }}{{ form_widget(form_filtre.semestre) }}</div>
+					<div class="col-2" id="annee" >{{ form_label(form_filtre.annee) }}{{ form_widget(form_filtre.annee) }}</div>
+					<div class="col-2">
+						<br>
+						<button class="btn btn-primary form-control">{{ button_label|default('Rechercher Bilan') }}</button>
+					</div>
+				</div>
+			</div>
+			{{ form_end(form_filtre) }}
+
+	<!-- Main content -->
+		<section class="content col-12 mt-5"> <div class="card card-fuchsia">
+			<div class="card-header">
+				<h5 align="center">
+					BILAN FINANCIER {{ bilan_type_choix }} ANNEE {{ bilan_type_annee}} DU CENTRE D°ORPHELINAT DE LA GENDARMERIE
+				</h5>
+			</div>
+			<!-- /.card-header -->
+			<div class="card-body">
+				<table id="example1" class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>Rubrique</th>
+							<th>Type</th>
+							<th>Montant</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% set solde = mouvementService.getSoldeDate(jour_balance) %}
+						{% set i = 0 %}
+						{% set sum = 0 %}
+						{% set sum_total = 0 %}
+						{% set type_cle = null %}
+
+								<tr>
+								<td></td>
+								<td bgcolor="orange">Balance {{ jour_balance|date('d/m/Y') }}</td>
+								<td>{{ solde|number_format(2, ',', ' ') }}</td>
+								</tr>
+
+						{% for b in bilans %}			
+														
+							{% if type_cle is null %}
+								{% set type_cle = b['type']  %}
+								{% set sum = sum + b['montant'] %}								
+							{% elseif type_cle == b['type'] %}
+								{% set sum = sum + b['montant'] %}
+							{% else %}
+								<tr>
+								<td></td>
+								<td bgcolor="orange">TOTAL bilan lié au {{ type_cle }}</td>
+								<td class="text-right">{{ sum|number_format(2, ',', ' ') }}</td>
+								</tr>
+								{% set type_cle = b['type']  %}
+								{% set sum = b['montant'] %}	
+								
+							{% endif %}
+							
+							<tr>
+								<td>{{ b['libelle'] }}</td>
+								<td>{{ b['type'] }}</td>
+								<td class="text-right">{{ b['montant']|number_format(2, ',', ' ') }}</td>
+							</tr>
+							{% set i = i + 1 %}
+							{% if b['ttype'] == 'plus' %}
+							{% set solde = solde + b['montant'] %}
+							{% elseif b['ttype'] == 'moins' %}
+							{% set solde = solde - b['montant'] %}
+							{% endif %}
+
+							{% if i == bilans|length %}
+							<tr>
+								<td></td>
+								<td bgcolor="orange">TOTAL bilan lié au {{ type_cle }}</td>
+								<td class="text-right">{{ sum|number_format(2, ',', ' ') }}</td>
+								</tr>
+							{% endif %}
+							
+							
+
+						{% endfor %}
+
+						<tr>
+								<td></td>
+								<td>Balance</td>
+								<td class="text-right">{{ solde|number_format(2, ',', ' ') }}</td>
+								</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- /.card-body -->
+		</div>
+	</section>
+	{% block script_supplement %}
+		<!-- ./wrapper -->
+		<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+		<!-- jQuery UI 1.11.4 -->
+		<script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+		<!-- DataTables  & Plugins -->
+		<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+		<script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
+		<script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
+		<script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+
+		<script>
+			$(function () {
+
+$("#example1").DataTable().destroy();
+$("#example1").DataTable({
+"responsive": true,
+"lengthChange": false,
+"autoWidth": false,
+"ordering" : false,
+"language" :{
+	"search":"Rechercher :",
+	"info" : "Affichage de _START_ - _END_ / _TOTAL_ ",
+	"paginate": {"next" : "Suivant", "previous":"précédant"}
+},
+"columnDefs" : [{
+"targets" :2,
+"className":'text-right'
+},{
+"targets" :1,
+"className":"text-center"
+}
+],
+"buttons": [, "excel",{
+	extend :"pdfHtml5" ,
+	title:'',
+	text : "PDF",	
+        pageSize: 'LEGAL',
+        customize: function (doc){
+			console.log(doc.content);
+			doc.content = [
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : " COMMANDEMENT DE LA GENDARMERIE NATIONALE",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"REPOBLIKAN°I MADAGASIKARA",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "-------------------------",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"Fitiavana-Tanindrazana-Fandrosoana",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "DIRECTION DE LA GESTION DU PERSONNEL",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"------------------------",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "-------------------------",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "CENTRE D'ORPHELINAT DE LA GENDARMERIE NATIONALE",
+							"style" : ""	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"A Arivonimamo, le{{ date_encours|date("d/m/Y") }}",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "--------------------------",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "40%",
+							"text" : "",
+							"style" : "center"	
+						},
+						{
+							"width" : "20%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"-",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "100%",
+							"text" : "BILAN FINANCIERE {{ bilan_type_choix }} ANNEE {{ bilan_type_annee}} DU CENTRE D'ORPHELINAT DE LA GENDARMERIE",
+							"style" : "titre"	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "40%",
+							"text" : "",
+							"style" : "center"	
+						},
+						{
+							"width" : "20%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"-",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+			 doc.content
+			]
+			doc.styles = {
+				"center" :{
+					    "alignment": "center"
+						
+				},
+				"titre" :{
+					    "alignment": "center",
+						"bold": true,
+						"underline": true
+						
+				}, 
+				"table" : {
+					"alignment": "center"
+				},
+    "tableHeader": {
+        "bold": true,
+        "fontSize": 11,
+        "color": "white",
+        "fillColor": "#2d4154",
+        "alignment": "center"
+    },
+    "tableBodyEven": {
+		
+	},
+    "tableBodyOdd": {
+        "fillColor": "#f3f3f3"
+    },
+    "tableFooter": {
+        "bold": true,
+        "fontSize": 11,
+        "color": "white",
+        "fillColor": "#2d4154"
+    },
+    "title": {
+        "alignment": "center",
+        "fontSize": 15
+    },
+    "message": {}
+}
+			
+			}
+           
+}, 
+{
+	
+	title:'',
+	
+	customize: function (win){
+		$(win.document.body)
+		.css('font-size','10pt')
+		.prepend(
+			
+			'<div class = "row">'+
+			'<div class="col-5 text-center">GENDARMERIE NATIONALE </div>'+
+			'<div class="col-2"></div>'+
+			'<div class="col-5 text-center">REPOBLIKAN°I MADAGASIKARA </div>'+
+			'</div>'+
+			'<div class = "row">'+
+			'<div class="col-5 text-center">CENTRE ORPHELINAT</div>'+
+			'<div class="col-2"></div>'+
+			'<div class="col-5 text-center">Fitiavana-Tanindrazana-Fandrosoana</div>'+
+			'</div>'+
+			'<br/>'+
+			'<div class = "row">'+
+			'<div class="col-5"></div>'+
+			'<div class="col-2"></div>'+
+			'<div class="col-5 text-center">A Antananrivo, le {{ date_encours|date("d/m/Y") }} </div>'+
+			'</div>'+
+			'<br/>'+
+			'<div class = "row">'+
+			'<div class="col-2"></div>'+
+			'<div class="col-8 text-center"><u><b>BILAN FINANCIER DU CENTRE D°ORPHELINAT DE LA GENDARMERIE NATIONALE</b></u></div>'+
+			'<div class="col-2"></div>'+
+			'</div>'
+		);
+		$(win.document.body).find('table')
+		.addClass('compact')
+		.css('font-size','inherit');
+	}
+}
+]
+}).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+});
+$("#filtre_bilan_type").val('');
+$("#filtre_bilan_mensuel").hide();
+        $("#filtre_bilan_trimestriel").hide();
+        $("#filtre_bilan_semestre").hide();
+        $("#filtre_bilan_annee").hide();
+
+$("#filtre_bilan_type").on('change',function(event) {
+    switch ($("#filtre_bilan_type").val()) {
+    case "Mensuel":
+        $("#filtre_bilan_mensuel").show();
+        $("#filtre_bilan_trimestriel").hide();
+        $("#filtre_bilan_semestre").hide();
+        $("#filtre_bilan_annee").show();
+        break;
+    case "Trimestriel":
+       $("#filtre_bilan_mensuel").hide();
+        $("#filtre_bilan_trimestriel").show();
+        $("#filtre_bilan_semestre").hide();
+        $("#filtre_bilan_annee").show();
+        break;
+    case "Semestriel":
+        $("#filtre_bilan_mensuel").hide();
+        $("#filtre_bilan_trimestriel").hide();
+        $("#filtre_bilan_semestre").show();
+        $("#filtre_bilan_annee").show();
+        break;
+     case "Annuel":
+        $("#filtre_bilan_mensuel").hide();
+        $("#filtre_bilan_trimestriel").hide();
+        $("#filtre_bilan_semestre").hide();
+        $("#filtre_bilan_annee").show();
+        break;
+
+    default:
+        $("#filtre_bilan_mensuel").hide();
+        $("#filtre_bilan_trimestriel").hide();
+        $("#filtre_bilan_semestre").hide();
+        $("#filtre_bilan_annee").hide();
+        break;
+}
+})
+
+		</script>
+	{% endblock %}
+{% endblock %}

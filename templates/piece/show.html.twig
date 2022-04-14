@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Piece{% endblock %}
+
+{% block body %}
+    <h1>Piece</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Idpiece</th>
+                <td>{{ piece.idpiece }}</td>
+            </tr>
+            <tr>
+                <th>Libellepiece</th>
+                <td>{{ piece.libellepiece }}</td>
+            </tr>
+            <tr>
+                <th>Datepiece</th>
+                <td>{{ piece.datepiece ? piece.datepiece|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('piece_index') }}">back to list</a>
+
+    <a href="{{ path('piece_edit', {'idpiece': piece.idpiece}) }}">edit</a>
+
+    {{ include('piece/_delete_form.html.twig') }}
+{% endblock %}

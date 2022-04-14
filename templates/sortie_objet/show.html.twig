@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SortieObjet{% endblock %}
+
+{% block body %}
+    <h1>SortieObjet</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ sortie_objet.id }}</td>
+            </tr>
+            <tr>
+                <th>Date_sortie</th>
+                <td>{{ sortie_objet.dateSortie ? sortie_objet.dateSortie|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Unite_objet</th>
+                <td>{{ sortie_objet.uniteObjet }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('sortie_objet_index') }}">back to list</a>
+
+    <a href="{{ path('sortie_objet_edit', {'id': sortie_objet.id}) }}">edit</a>
+
+    {{ include('sortie_objet/_delete_form.html.twig') }}
+{% endblock %}

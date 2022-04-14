@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste Don
+{% endblock %}
+
+{% block body %}
+<section class="content col-12 mt-5">
+	<div class="card card-warning">
+		<div class="card-header">
+			<h1>Liste don</h1>
+		</div>
+		<div class="card-body">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>DONNATEUR</th>
+						<th>DATE DON</th>
+						<th>MONTANT DON</th>
+						<th>DESCRIPTION</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for don in dons %}
+						<tr>
+							<td>{{ don.nomdonnateur }}</td>
+							<td>{{ don.iddon.idrecette.datemouvement ? don.iddon.idrecette.datemouvement|date('Y-m-d') : '' }}</td>
+							<td>{{ don.iddon.idrecette.montant }}</td>
+							<td>{{ don.iddon.idrecette.description }}</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="2">no records found</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+    </section>
+{% endblock %}

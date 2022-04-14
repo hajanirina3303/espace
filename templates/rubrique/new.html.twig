@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nouvel Rubrique
+{% endblock %}
+{% block body %}
+	<section class="content col-12 mt-5">
+		<div class="card card-info">
+			<div class="card-header">
+				<h2 class="card-title">Nouvelle rubrique</h2>
+			</div>
+			{{ include('rubrique/_form.html.twig') }}
+
+		</div>
+	</section>
+	<button class="btn btn-warning">
+		<a href="{{ path('rubrique_index') }}">voir liste</a>
+	</button>
+{% endblock %}

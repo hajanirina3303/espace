@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}rgts donnateur{% endblock %}
+
+{% block body %}
+<section class="content col-12 mt-5">
+<div class="card card-gray">
+<div class ="card-header">
+    <h3 align="center"> RENSEIGNEMENT DONNATEUR </h3>
+</div>
+    {{ include('don_objet/_form.html.twig') }}
+</div>
+</section>
+    <a class =" btn btn-warning" href="{{ path('don_objet_index') }}">Voir list</a>
+{% endblock %}

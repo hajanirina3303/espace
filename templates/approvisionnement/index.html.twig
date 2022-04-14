@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Approvisionnement index{% endblock %}
+
+{% block body %}
+    <h1>Approvisionnement index</h1>
+
+    <table class="table">
+        <thead>
+               <tr>
+               <th>DATE APPRO</th>
+               <th>RUBRIQUE APPRO</th>
+               <th>NUMERO PIECE</th>
+               <th>QUITTANCE ET DATE</th>
+               <th>MONTANT RECETTE</th>
+               <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for approvisionnement in approvisionnements %}
+            <tr>
+                <td>{{ approvisionnement.idapprovisionnement.idrecette.datemouvement ? approvisionnement.idapprovisionnement.idrecette.datemouvement|date('Y-m-d') : '' }}</td>
+                <td>{{ approvisionnement.idapprovisionnement.idrecette.idmouvement}}</td>
+                <td>{{ approvisionnement.idapprovisionnement.idrecette.idmouvement }}</td>
+                <td>{{ approvisionnement.idapprovisionnement.idrecette.idmouvement }}</td>
+                <td>{{ approvisionnement.idapprovisionnement.idrecette.montant }}</td>
+                <td>
+                    <a href="{{ path('approvisionnement_show', {'idapprovisionnement': approvisionnement.idapprovisionnement.idrecette.idMouvement }) }}">show</a>
+                    {% if is_granted('ROLE_EDITEUR') %}
+                    <a href="{{ path('approvisionnement_edit', {'idapprovisionnement': approvisionnement.idapprovisionnement.idrecette.idMouvement }) }}">edit</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="1">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+ {% if is_granted('ROLE_EDITEUR') %}
+    <a href="{{ path('approvisionnement_new') }}">Create new</a>
+    {% endif %}
+{% endblock %}

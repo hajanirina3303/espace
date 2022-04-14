@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit SortieObjet{% endblock %}
+
+{% block body %}
+    <h1>Edit SortieObjet</h1>
+
+    {{ include('sortie_objet/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('sortie_objet_index') }}">back to list</a>
+
+    {{ include('sortie_objet/_delete_form.html.twig') }}
+{% endblock %}

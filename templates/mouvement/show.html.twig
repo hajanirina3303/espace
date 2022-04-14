@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mouvement{% endblock %}
+
+{% block body %}
+    <h1>Mouvement</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Idmouvement</th>
+                <td>{{ mouvement.idmouvement }}</td>
+            </tr>
+            <tr>
+                <th>Datemouvement</th>
+                <td>{{ mouvement.datemouvement ? mouvement.datemouvement|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Montant</th>
+                <td>{{ mouvement.montant }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ mouvement.description }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('mouvement_index') }}">Voir liste</a>
+     {% if is_granted('ROLE_EDITEUR') %}
+
+    <a href="{{ path('mouvement_edit', {'idmouvement': mouvement.idmouvement}) }}">edit</a>
+
+    {{ include('mouvement/_delete_form.html.twig') }}
+    {% endif %}
+{% endblock %}

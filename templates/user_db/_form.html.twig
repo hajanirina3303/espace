@@ -1,0 +1,15 @@
+
+{{ form_start(form) }}
+
+ {{ form_label(form.username) }}
+    {{ form_widget(form.username) }}
+     {{ form_label(form.nom) }}
+    {{ form_widget(form.nom) }}
+     {{ form_label(form.prenom) }}
+    {{ form_widget(form.prenom) }}       
+    {{ form_widget(form.password) }}
+     {{ form_label(form.roles) }}
+    {{ form_widget(form.roles) }}
+    <br/>
+    <button class="btn btn-primary float-left"  type="btn" >{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}

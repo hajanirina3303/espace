@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  sortie objet
+{% endblock %}
+
+{% block body %}
+  <section class="content col-12 mt-5">
+    <div class="card card-maroon">
+      <div class="card-header">
+        <h3 align="center">
+           OBJETS DONS SORTIS ET STOCKS
+        </h3>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th> Date sortie</th>
+            <th> objet </th>
+            <th> quantite</th>
+            <th> sortie </th>
+            <th> reste  </th>
+            <th> rubrique</th>
+             </tr>
+        </thead>
+        <tbody>
+          {% for sortie_objet in sortie_objets %}
+            <tr>
+              <td>{{ sortie_objet.dateSortie ? sortie_objet.dateSortie|date('d-m-Y'): '' }}
+              </td>
+              <td>
+                {{ sortie_objet.objet.description }}
+              </td>
+              <td>
+                qte {{ sortie_objet.objet.quantite }}
+              </td>
+              <td>
+                sortie {{ sortie_objet.uniteObjet }}
+              </td>
+              <td>
+                reste {{ sortie_objet.objet.quantite - sortie_objet.uniteObjet }}
+              </td>
+              <td>
+                {{ sortie_objet.objet.rubrique.libellerubrique }}
+              </td>
+              </tr>
+          {% else %}
+            <tr>
+              <td colspan="4">
+                no records found
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <a class=" btn btn-primary" href="{{ path('sortie_objet_new') }}">Ajouter</a>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}acquis objet{% endblock %}
+
+{% block body %}
+<section class="content col-12 mt-5">
+    <div class="card card-secondary">
+      <div class="card-header">
+    <h3 align = "center">ACQUIS OBJET DON</h3>
+</div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Donnateur</th>
+                <th>TPH</th>
+                <th>Adresse</th>
+                <th>Objet</th>
+                <th>Quantite</th>
+                <th>Valeur</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for don_objet in don_objets %}
+        {% for item in don_objet.objets %}
+             <tr>
+                <td>{{ don_objet.dateObjet ? don_objet.dateObjet|date('d-m-Y') : '' }}</td>
+                <td>{{ don_objet.nomDonnateur }}</td>
+                <td>{{ don_objet.numeroPhone }}</td>
+                <td>{{ don_objet.addresse }}</td>
+                <td>{{ item.description }}  </td>
+                <td>{{ item.quantite }}</td>
+                <td>{{ item.Valeur }}</td>
+                <td>{{ item.quantite * item.Valeur }}</td>
+                <td>
+                    <a href="{{ path('don_objet_show', {'id': don_objet.id}) }}">show</a>
+                    <a href="{{ path('don_objet_edit', {'id': don_objet.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+           
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</section>
+    <a class=" btn btn-primary" href="{{ path('don_objet_new') }}">Ajouter</a>
+{% endblock %}

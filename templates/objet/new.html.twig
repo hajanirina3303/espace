@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ajout objet{% endblock %}
+
+{% block body %}
+<section class="content col-12 ">
+<div class="card card-gray">
+<div class ="card-header">
+    <h3 align="center">DATE DON ET RENSEIGNEMENTS DONNATEUR</h3>
+</div>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Date</th>
+                 <th>Nom Donnateur</th>
+                 <th>Numero TPH</th>
+                 <th>Adresse</th>               
+            </tr>
+            <tr>
+               <td>{{ do.dateObjet ? do.dateObjet|date('Y-m-d') : '' }}</td>
+               <td>{{ do.nomDonnateur }}</td>
+                <td>{{ do.numeroPhone }}</td>  
+                <td>{{ do.addresse }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</section>
+<section class="content col-12 ">
+<div class="card card-gray">
+<div class ="card-header">
+<h3 align="center"> OBJETS DONS</h3>
+</div>
+    {{ include('objet/_form.html.twig') }}
+</div>
+</section>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Quantite</th>
+                <th>Valeur</th>
+                 <th>Rubrique</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for objet in os %}
+            <tr>
+               <td>{{ objet.description }}</td>
+                <td>{{ objet.quantite }}</td>
+                <td>{{ objet.valeur }}</td>
+                <td>{{ objet.rubrique.refRubrique }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('objet_index') }}">back to list</a>
+{% endblock %}

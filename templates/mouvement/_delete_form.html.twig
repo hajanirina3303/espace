@@ -1,0 +1,6 @@
+<form method="post" action="{{ path('mouvement_delete', {'idmouvement': mouvement.idmouvement}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ mouvement.idmouvement) }}">
+    {% if is_granted('ROLE_EDITEUR') %}
+    <button class="btn">Supprimer</button>
+    {% endif %}
+</form>

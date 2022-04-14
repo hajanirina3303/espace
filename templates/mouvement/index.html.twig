@@ -1,0 +1,474 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	mouvements
+{% endblock %}
+
+{% block body %}
+
+	{{ form_start(form_filtre,{attr: {class : 'col-12'} }) }}
+	<div class="col-12">
+		<div class="row">
+			<div class="col-4">{{ form_label(form_filtre.dateDebut) }}{{ form_widget(form_filtre.dateDebut) }}</div>
+			<div class="col-4">{{ form_label(form_filtre.dateFin) }}{{ form_widget(form_filtre.dateFin) }}</div>
+			<div class="col-4">
+			<div>-</div>
+				<button class="btn btn-primary form-control">{{ button_label|default('Rechercher entre deux dates') }}</button>
+			</div>
+		</div>
+	</div>
+	{{ form_end(form_filtre) }}
+
+	<!-- Main content -->
+	<section class="content col-12 mt-5">
+	<div class="col-2 offset-0">
+			{% if is_granted('ROLE_EDITEUR') %}
+				<a class="col-12 btn btn-large btn-primary" href="{{ path('mouvement_new') }}">
+					Ajouter
+				</a>
+			{% endif %}
+	</div>
+	<br/>
+		<div class="card card-indigo">
+			<div class="card-header">
+				<h5 align="center">
+				 DETAIL DES MOUVEMENTS DANS LA CAISSE DU COGN
+				</h5>
+			</div>
+			<!-- /.card-header -->
+			<div class="card-body">
+				<table id="example1" class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Rubrique</th>
+							<th>N° Piece</th>
+							<th>Piece</th>
+							<th>Date Piece</th>
+							<th>Description</th>
+							<th>
+								Recette
+							</th>
+							<th>
+								Depense
+							</th>
+							<th>Balances</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							{% if id_mouvement is null %}
+								{% set solde = mouvementService.getSoldeDate(date_debut) %}
+							{% else %}
+								{% set solde = mouvementService.getIdDate(id_mouvement) %}
+							{% endif %}
+
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>Repport</td>
+							<td></td>
+							<td></td>
+							<td class="text-right">
+								{{ solde|number_format(2,',',' ') }}</td>
+						</tr>
+						{% set balance = solde %}
+
+						{% set i = 0 %}
+
+						{% for mouvement in mouvements %}
+
+							{% set j = mouvements|length - 1 - i %}
+
+							{% if mouvements[j].recette != null and mouvements[j].recette.don != null %}
+								<tr class="bg-warning">
+									<td>{{ mouvements[j].datemouvement ? mouvements[j].datemouvement|date('d-m-Y') : '' }}</td>
+									<td>{{ mouvements[j].rubriqueRef.refrubrique }}</td>
+									<td>{{ mouvements[j].piece.numeropiece }}</td>
+									<td>{{ mouvements[j].piece.libellepiece }}</td>
+									<td>{{ mouvements[j].piece.datepiece ? mouvements[j].piece.datepiece|date('d-m-Y') : '' }}</td>
+									<td>{{ mouvements[j].description}}</td>
+
+									<td>{{ mouvements[j].montant|number_format(2,',',' ') }}</td>
+									<td></td>
+									{% set balance = balance + mouvements[j].montant  %}
+
+									<td>
+										{{ balance|number_format(2,',',' ') }}
+									</td>
+								</tr>
+
+						    {% elseif mouvements[j].recette != null %}
+				
+								<tr class="bg-success">
+									<td>{{ mouvements[j].datemouvement ? mouvements[j].datemouvement|date('d-m-Y') : '' }}</td>
+									<td>{{ mouvements[j].rubriqueRef.refrubrique }}</td>
+									<td>{{ mouvements[j].piece.numeropiece }}</td>
+									<td>{{ mouvements[j].piece.libellepiece }}</td>
+									<td>{{ mouvements[j].piece.datepiece ? mouvements[j].piece.datepiece|date('d-m-Y') : '' }}</td>
+									<td>{{ mouvements[j].description}}</td>
+
+									<td>{{ mouvements[j].montant|number_format(2,',',' ') }}</td>
+									<td></td>
+									{% set balance = balance + mouvements[j].montant  %}
+
+									<td>
+										{{ balance|number_format(2,',',' ') }}
+									</td>
+								</tr>
+							{% else %}
+								<tr class="bg-danger">
+									<td>{{ mouvements[j].datemouvement ? mouvements[j].datemouvement|date('d-m-Y') : '' }}</td>
+									<td>{{ mouvements[j].rubriqueRef.refrubrique }}</td>
+									<td>{{ mouvements[j].piece.numeropiece }}</td>
+									<td>{{ mouvements[j].piece.libellepiece }}</td>
+									<td>{{ mouvements[j].piece.datepiece ? mouvements[j].piece.datepiece|date('d-m-Y') : '' }}</td>
+									<td>{{ mouvements[j].description}}</td>
+									<td></td>
+									<td>{{ mouvements[j].montant|number_format(2,',',' ') }}</td>
+									{% set balance = balance - mouvements[j].montant  %}
+
+									<td>
+										{{ balance|number_format(2,',',' ') }}
+									</td>
+								</tr>
+							{% endif %}
+
+							{% set i = i + 1 %}
+
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			<!-- /.card-body -->
+		</div>
+		<div class="col-2 offset-0">
+			{% if is_granted('ROLE_EDITEUR') %}
+				<a class="col-12 btn btn-large btn-primary" href="{{ path('mouvement_new') }}">
+					Ajouter
+				</a>
+			{% endif %}
+		</div>
+	</section>
+	{% block script_supplement %}
+		<!-- ./wrapper -->
+		<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+		<!-- jQuery UI 1.11.4 -->
+		<script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+		<!-- DataTables  & Plugins -->
+		<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+		<script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
+		<script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
+		<script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+			<script>
+			$(function () {
+
+$("#example1").DataTable().destroy();
+$("#example1").DataTable({
+"responsive": true,
+"lengthChange": false,
+"autoWidth": false,
+"pageLength": -1,
+"ordering": false,
+"language" :{
+	"search":"Rechercher :",
+	"info" : "Affichage de _START_ - _END_ / _TOTAL_ ",
+	"paginate": {"next" : "Suivant", "previous":"précédant"}
+},
+"searching": false,
+"columnDefs": [
+{
+"targets": 8,
+"className": "text-right"
+},
+{
+"targets": 7,
+"className": "text-right"
+},
+{
+"targets": 6,
+"className": "text-right"
+},
+{
+"targets": 2,
+"className": 'text-center'
+}, 
+{
+"targets": 1,
+"className": "text-center"
+}
+],
+"buttons": [
+ "excel",
+{
+	extend :"pdfHtml5" ,
+	title:'',
+	text : "PDF",	
+        pageSize: 'LEGAL',
+        customize: function (doc){
+			console.log(doc.content);
+			doc.content = [
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : " COMMANDEMENT DE LA GENDARMERIE NATIONALE",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"REPOBLIKAN°I MADAGASIKARA",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "-------------------------",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"Fitiavana-Tanindrazana-Fandrosoana",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "DIRECTION DE LA GESTION DU PERSONNEL",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"------------------------",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "-------------------------",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "CENTRE D'ORPHELINAT DE LA GENDARMERIE NATIONALE",
+							"style" : ""	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"A Arivonimamo, le {{ date_encours|date("d/m/Y") }}",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "--------------------------",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "40%",
+							"text" : "",
+							"style" : "center"	
+						},
+						{
+							"width" : "20%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"-",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "100%",
+							"text" : "DETAIL DE MOUVEMENT FINANCIERE DU CENTRE D'ORPHELINAT DE LA GENDARMERIE NATIONALE",
+							"style" : "titre"	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "40%",
+							"text" : "",
+							"style" : "center"	
+						},
+						{
+							"width" : "20%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"-",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+			 doc.content
+			]
+			doc.styles = {
+				"center" :{
+					    "alignment": "center"
+						
+				},
+				"titre" :{
+					    "alignment": "center",
+						"bold": true,
+						"underline": true
+						
+				}, 
+				"table" : {
+					"alignment": "center"
+				},
+    "tableHeader": {
+        "bold": true,
+        "fontSize": 11,
+        "color": "white",
+        "fillColor": "#2d4154",
+        "alignment": "center"
+    },
+    "tableBodyEven": {
+		
+	},
+    "tableBodyOdd": {
+        "fillColor": "#f3f3f3"
+    },
+    "tableFooter": {
+        "bold": true,
+        "fontSize": 11,
+        "color": "white",
+        "fillColor": "#2d4154"
+    },
+    "title": {
+        "alignment": "center",
+        "fontSize": 15
+    },
+    "message": {}
+}
+			
+			}
+           
+},
+{
+
+title:'',
+
+customize: function (win) {
+$(win.document.body).css('font-size', '10pt')
+.prepend('<div class = "row">'+
+			'<div class="col-5 Text-center">GENDARMERIE NATIONALE </div>'+
+			'<div class="col-2"></div>'+
+			'<div class="col-5 Text-center">REPOBLIKAN°I MADAGASIKARA </div>'+
+			'</div>'+
+			'<div class = "row">'+
+			'<div class="col-5 Text-center">CENTRE ORPHELINAT</div>'+
+			'<div class="col-2"></div>'+
+			'<div class="col-5 Text-center">Fitiavana-Tanindrazana-Fandrosoana</div>'+
+			'</div>'+
+			'<br/>'+
+			'<div class = "row">'+
+			'<div class="col-5"></div>'+
+			'<div class="col-2"></div>'+
+			'<div class="col-5 Text-center">A Antananrivo, le </div>'+
+			'</div>'+
+			'<br/>'+
+			'<div class = "row">'+
+			'<div class="col-2"></div>'+
+			'<div class="col-8 Text-center"><u><b>LISTE DE DETAIL DES MOUVEMENTS DANS LA CAISSE DU CENTRE D°ORPHELINA DE LA GENDARMERIE NATIONALE</b></u></div>'+
+			'<div class="col-2"></div>'+
+			'</div>'
+);
+$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+}
+}
+]
+}).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+});
+		</script>
+	{% endblock %}
+{% endblock %}

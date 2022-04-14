@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Releve{% endblock %}
+
+{% block body %}
+    <h1>Releve</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Idreleve</th>
+                <td>{{ releve.idreleve }}</td>
+            </tr>
+            <tr>
+                <th>Datereleve</th>
+                <td>{{ releve.datereleve ? releve.datereleve|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Datedebut</th>
+                <td>{{ releve.datedebut ? releve.datedebut|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Datefin</th>
+                <td>{{ releve.datefin ? releve.datefin|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Montantdebut</th>
+                <td>{{ releve.montantdebut }}</td>
+            </tr>
+            <tr>
+                <th>Montantfin</th>
+                <td>{{ releve.montantfin }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('releve_index') }}">back to list</a>
+
+    <a href="{{ path('releve_edit', {'idreleve': releve.idreleve}) }}">edit</a>
+
+    {{ include('releve/_delete_form.html.twig') }}
+{% endblock %}

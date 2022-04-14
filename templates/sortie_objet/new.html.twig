@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}nouvel sortie{% endblock %}
+
+{% block body %}
+<section class="content col-12 mt-5">
+<div class="card card-purple">
+<div class ="card-header">
+    <h3 align = "center">CREER SORTIE OBJET</h3>
+</div>
+    {{ include('sortie_objet/_form.html.twig') }}
+</div>
+</section>
+    <a  class=" btn btn-warning" href="{{ path('sortie_objet_index') }}">Voir liste</a>
+{% endblock %}

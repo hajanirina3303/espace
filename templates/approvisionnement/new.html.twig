@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Approvisionnement{% endblock %}
+
+{% block body %}
+    <h1>Create new Approvisionnement</h1>
+
+    {{ include('approvisionnement/_form.html.twig') }}
+
+    <a href="{{ path('approvisionnement_index') }}">back to list</a>
+{% endblock %}

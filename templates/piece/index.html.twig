@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pieces{% endblock %}
+
+{% block body %}
+    <h1>Piece index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Idpiece</th>
+                <th>Libellepiece</th>
+                <th>Datepiece</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for piece in pieces %}
+            <tr>
+                <td>{{ piece.idpiece }}</td>
+                <td>{{ piece.libellepiece }}</td>
+                <td>{{ piece.datepiece ? piece.datepiece|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('piece_show', {'idpiece': piece.idpiece}) }}">voir</a>
+                     {% if is_granted('ROLE_EDITEUR') %}
+                    <a href="{{ path('piece_edit', {'idpiece': piece.idpiece}) }}">modifier</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+     {% if is_granted('ROLE_EDITEUR') %}
+<button class="btn btn-warning float-left " type="btn"> 
+     <a href="{{ path('piece_new') }}">ajouter</a>
+    </button>
+    {% endif %}
+{% endblock %}

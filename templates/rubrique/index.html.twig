@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rubrique index
+{% endblock %}
+
+{% block body %}
+	<section class="content col-12 mt-5">
+		<div class="card card-primary">
+			<div class="card-header">
+				<h1>Rubrique</h1>
+			</div>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>rubrique</th>
+						<th>Libelle</th>
+						<th>type</th>
+						<th>actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for rubrique in rubriques %}
+						<tr>
+							<td>{{ rubrique.refrubrique }}</td>
+							<td>{{ rubrique.libellerubrique }}</td>
+							<td>{{ rubrique.type }}</td>
+							<td>
+								<a href="{{ path('rubrique_show', {'refrubrique': rubrique.refrubrique}) }}">voir</a>
+								{% if is_granted('ROLE_EDITEUR') %}
+									<a href="{{ path('rubrique_edit', {'refrubrique': rubrique.refrubrique}) }}">modifier</a>
+								{% endif %}
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="3">no records found</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div class="col-2 offset-5">
+			{% if is_granted('ROLE_EDITEUR') %}
+				<a class="col-12 btn btn-large btn-warning" href="{{ path('rubrique_new') }}">
+					Ajouter
+				</a>
+			{% endif %}
+		</div>
+	</section>
+{% endblock %}

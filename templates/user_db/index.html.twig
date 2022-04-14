@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}utilisateur
+{% endblock %}
+
+{% block body %}
+	<section class="content col-12 mt-5">
+		<div class="card card-info">
+			<div class="card-header">
+				<h3 align="center">LISTE DES UTILISATEURS DE L°APPLICATION</h3>
+			</div>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Numéro</th>
+						<th>Idendifiant</th>
+						<th>Nom</th>
+						<th>Prenom</th>
+						<th>Roles</th>
+						<th>actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for user_d_b in user_d_bs %}
+						<tr>
+							<td>{{ user_d_b.id }}</td>
+							<td>{{ user_d_b.username }}</td>
+							<td>{{ user_d_b.nom }}</td>
+							<td>{{ user_d_b.prenom }}</td>
+							<td>
+							{% for item in user_d_b.roles %}
+							{% if item == 'ROLE_ADMIN' %}
+							ADMINISTRATEUR
+							{% elseif item == 'ROLE_CONSULTANT' %}
+							CONSULTATION
+							{% else %}
+							MISE A JOUR
+							{% endif %}
+							{% endfor %}
+							</td>
+							<td>
+								<a class="btn btn-xs btn-danger">{{ include('user_db/_delete_form.html.twig') }}</a>
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="7">no records found</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div class="col-2 offset-5">
+            {% if is_granted('ROLE_EDITEUR') %}
+			<a class="col-12 btn btn-large btn-primary" href="{{ path('user_d_b_new') }}">Ajouter</a>
+            {% endif %}
+		</div>
+	</section>
+{% endblock %}

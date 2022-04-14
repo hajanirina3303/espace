@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}utilisateur
+{% endblock %}
+
+{% block body %}
+	<section class="content col-12 mt-5">
+		<div class="card card-info">
+			<div class="card-header">
+				<h3 align="center">FORMUNLAIRE D°AJOUT D°UN NOUVEL UTILISATEUR</h3>
+			</div>
+			<div class="card-body">
+			{{ include('user_db/_form.html.twig') }}
+			</div>
+		</div>
+	</section>
+	<a class=" btn btn-warning" href="{{ path('user_d_b_index') }}">voir liste</a>
+{% endblock %}

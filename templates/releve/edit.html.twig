@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Releve{% endblock %}
+
+{% block body %}
+    <h1>Edit Releve</h1>
+
+    {{ include('releve/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('releve_index') }}">back to list</a>
+
+    {{ include('releve/_delete_form.html.twig') }}
+{% endblock %}

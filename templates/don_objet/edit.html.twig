@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit DonObjet{% endblock %}
+
+{% block body %}
+    <h1>Edit DonObjet</h1>
+
+    {{ include('don_objet/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('don_objet_index') }}">back to list</a>
+
+    {{ include('don_objet/_delete_form.html.twig') }}
+{% endblock %}

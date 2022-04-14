@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Depense index{% endblock %}
+
+{% block body %}
+    <h1>Depense index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th>DATE DEPENSE</th>
+                 <th>NUMERO PIECE</th>
+                <th>PIECE DE DEPENSE</th>
+                <th>DATE PIECE</th>
+                <th>DESCRIPTION</th>
+                <th>MONTANT</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for depense in depenses %}
+            <tr> 
+                <td>{{ depense.iddepense.datemouvement ? depense.iddepense.datemouvement|date('Y-m-d') : ''}}</td>
+                <td>{{ depense.iddepense.piece }}</td>
+                <td>{{ depense.iddepense.piece.libellepiece }}</td>
+                <td>{{ depense.iddepense.piece.datepiece ? depense.iddepense.piece.datepiece|date('Y-m-d') : '' }}</td>
+                <td>{{ depense.iddepense.description }}</td>
+                <td>{{ depense.iddepense.montant }}</td>
+                <td>
+                    <a href="{{ path('depense_show', {'iddepense': depense.iddepense.idMouvement}) }}">show</a>
+                     {% if is_granted('ROLE_EDITEUR') %}
+                    <a href="{{ path('depense_edit', {'iddepense': depense.iddepense.idMouvement}) }}">edit</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="1">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+ {% if is_granted('ROLE_EDITEUR') %}
+    <a href="{{ path('depense_new') }}">Create new</a>
+    {% endif %}
+{% endblock %}

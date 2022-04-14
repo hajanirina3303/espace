@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mouvement
+{% endblock %}
+
+{% block body %}
+   {{ include('mouvement/_form.html.twig') }}
+    <a class="btn btn-info"  href="{{ path('mouvement_index') }}">voir liste</a>  
+{% endblock %}

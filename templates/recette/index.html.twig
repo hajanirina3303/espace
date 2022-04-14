@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recette index{% endblock %}
+
+{% block body %}
+    <h1>Recette</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>DATE MVT</th>
+                <th>RUBRIQUE ET NUM</th>
+                <th>PIECE</th>
+                <th>MONTANT</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for recette in recettes %}
+            <tr>
+                <td>{{ recette.idrecette.datemouvement ? recette.idrecette.datemouvement|date('Y-m-d') : ''}}</td>
+                <td>{{ recette.idrecette.rubriqueRef}}</td>
+                <td>{{ recette.idrecette.piece}}</td>
+                <td>{{ recette.idrecette.montant}}</td>
+                <td>
+                    <a href="{{ path('recette_show', {'idrecette': recette.idrecette.idMouvement}) }}">Voir</a>
+                     {% if is_granted('ROLE_EDITEUR') %}
+                    <a href="{{ path('recette_edit', {'idrecette': recette.idrecette.idMouvement }) }}">Modifier</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="1">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+ {% if is_granted('ROLE_EDITEUR') %}
+    <a href="{{ path('recette_new') }}">ajouter</a>
+    {% endif %}
+{% endblock %}
