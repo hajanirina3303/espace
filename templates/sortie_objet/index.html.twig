@@ -12,13 +12,15 @@
            OBJETS DONS SORTIS ET STOCKS
         </h3>
       </div>
+      
       <table class="table">
         <thead>
           <tr>
             <th> Date sortie</th>
             <th> objet </th>
-            <th> quantite</th>
-            <th> sortie </th>
+            <th> quantite</th>            
+            <th> quantite reste </th>
+            <th> sortie</th>
             <th> reste  </th>
             <th> rubrique</th>
              </tr>
@@ -31,14 +33,18 @@
               <td>
                 {{ sortie_objet.objet.description }}
               </td>
+
               <td>
                 qte {{ sortie_objet.objet.quantite }}
               </td>
               <td>
+                qte reste {{ sortie_objet.objet.getResteQuantite(sortie_objet.id) }}
+              </td>              
+              <td>
                 sortie {{ sortie_objet.uniteObjet }}
               </td>
               <td>
-                reste {{ sortie_objet.objet.quantite - sortie_objet.uniteObjet }}
+                reste {{ sortie_objet.objet.getResteQuantite(sortie_objet.id) - sortie_objet.uniteObjet }}
               </td>
               <td>
                 {{ sortie_objet.objet.rubrique.libellerubrique }}

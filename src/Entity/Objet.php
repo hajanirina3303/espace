@@ -80,6 +80,18 @@ class Objet
         return $this->quantite;
     }
 
+    public function getResteQuantite($idsortie):?int{
+        $somme_sortie = 0;
+        foreach ($this->sortieObjets as $variable) {
+            
+            if(($idsortie==null || $idsortie ==0)||$idsortie>$variable->getId()){
+                $somme_sortie = $somme_sortie + $variable->getUniteObjet();
+            }
+            
+        }
+        return $this->quantite - $somme_sortie;
+    }
+
     public function setQuantite(int $quantite): self
     {
         $this->quantite = $quantite;

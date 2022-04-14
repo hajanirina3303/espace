@@ -32,12 +32,12 @@ class SortieObjetController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($sortieObjet);
-            if($sortieObjet->getObjet()->getQuantite() - $sortieObjet->getUniteObjet() > 0)
+            if($sortieObjet->getObjet()->getResteQuantite(0) - $sortieObjet->getUniteObjet() > 0)
             {
                 $entityManager->flush();
                 return $this->redirectToRoute('sortie_objet_index', [], Response::HTTP_SEE_OTHER);
             }
-            else $erreur = "objet Lany";            
+            else $erreur = "objet quantite insuffisant";            
         }
 
         return $this->renderForm('sortie_objet/new.html.twig', [
