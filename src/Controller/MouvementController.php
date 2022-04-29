@@ -14,6 +14,7 @@ use App\Form\MouvementApprovisionnementType;
 use App\Form\MouvementDepenseType;
 use App\Form\MouvementDonType;
 use App\Form\MouvementType;
+use App\Repository\DonObjetRepository;
 use App\Repository\MouvementRepository;
 use App\Repository\RubriqueRepository;
 use App\Repository\PieceRepository;
@@ -31,17 +32,20 @@ class MouvementController extends AbstractController
     private MouvementRepository $mouvementRepository;
     private RubriqueRepository $rubriqueRepository;
     private PieceRepository $pieceRepository;
+    private DonObjetRepository $donObjetRepository;
 
     public function __construct(
         MouvementRepository $mouvementRepository,
         RubriqueRepository $rubriqueRepository,
-        PieceRepository $pieceRepository
+        PieceRepository $pieceRepository,
+        DonObjetRepository $donObjetRepository
     )
     {
         //repository
         $this->mouvementRepository = $mouvementRepository;
         $this->rubriqueRepository = $rubriqueRepository;
         $this->pieceRepository = $pieceRepository;
+        $this->donObjetRepository = $donObjetRepository;
 
     }
     
@@ -167,6 +171,88 @@ class MouvementController extends AbstractController
             'bilan_type_choix' => $bilan_type_choix,
             'bilan_type_annee' => $bilan_type_annee
         ]);
+    }
+
+    #[Route('/bilan_objet', name: 'bilan_objet', methods: ['GET', 'POST'])]
+    public function bilan_objet(Request $request,EntityManagerInterface $entityManager): Response
+    {
+        $bilans = array();
+
+        $date_encour = new DateTime();
+
+        $mois = date('n');
+        $year = date('Y');
+        $jour_balance = null;
+        $jour_fin_balance= null;
+
+        $mois_r = $mois==1?12:$mois-1;
+        $year_r = $mois==1?$year-1:$year;
+
+        $bilan_type = '';
+        $bilan_type_choix = ''; 
+        $bilan_type_annee = '';
+
+        $trimestriel = array(1=>array(1,2,3), 2 => array(4,5,6), 3 => array(7,8,9), 4 => array(10,11,12));
+        $semestre = array(1 => array(1,2,3,4,5,6), 2 => array(7,8,9,10,11,12));
+        $mensuel = array(1 => array(1),2 => array(2),3 => array(3), 4 => array(4),5 => array(5),6 => array(6),7 => array(7),8 => array(8),9 => array(9),10 => array(10),11 => array(11),12 => array(12));
+
+        $form_filtre = $this->createForm(FiltreBilanType::class);
+        $form_filtre->handleRequest($request);
+
+        if ($form_filtre->isSubmitted() && $form_filtre->isValid()) {
+
+            $data_filtre = $form_filtre->getData();
+            
+            $bilan_type = $data_filtre['type'];
+            $bilan_type_annee = $data_filtre['annee'];
+
+            $liste_mois = ['','JANVIER', 'FEVRIER', 'MARS', 'AVRIL', 'MAI', 'JUIN','JUILLET', 'AOUT', 'SEPTEMBRE','OCTOBRE','NOVEMBRE','DECEMBRE'];
+            $liste_trimestre = ['','PREMIER TRIMESTRE','DEUXIEME TRIMESTRE','TROISEIEME TREIMESTRE','QUATRIEME TRIMESTRE'];
+            $liste_semestre = ['','PREMIER SEMESTRE','DEUXIEME SEMESTRE'];
+
+            
+
+            switch ($data_filtre['type']) {
+                case 'Annuel':
+                    $bilans = $this->donObjetRepository->findByDate(array(1,2,3,4,5,6,7,8,9,10,11,12), $data_filtre['annee']);
+                    $jour_balance = new DateTime(date('Y-m-d', mktime(0,0,0,1,1, $data_filtre['annee']))); 
+                    break;
+                case 'Mensuel':
+                    $bilan_type_choix = $liste_mois[$data_filtre['mensuel']->id];
+                    $bilans = $this->donObjetRepository->findByDate($mensuel[$data_filtre['mensuel']->id], $data_filtre['annee']);
+                    $jour_balance = new DateTime(date('Y-m-d', mktime(0,0,0,$mensuel[$data_filtre['mensuel']->id][0],1, $data_filtre['annee']))); 
+                    
+                    break;
+                case 'Trimestriel':
+                    $bilan_type_choix = $liste_trimestre[$data_filtre['trimestriel']];
+                    $bilans = $this->donObjetRepository->findByDate($trimestriel[$data_filtre['trimestriel']], $data_filtre['annee']);
+                    $jour_balance = new DateTime(date('Y-m-d', mktime(0,0,0,$trimestriel[$data_filtre['trimestriel']][0],1, $data_filtre['annee']))); 
+                    break;
+                case 'Semestriel':
+                    $bilan_type_choix = $liste_semestre[$data_filtre['semestre']];
+                    $bilans = $this->donObjetRepository->findByDate($semestre[$data_filtre['semestre']], $data_filtre['annee']);
+                    $jour_balance = new DateTime(date('Y-m-d', mktime(0,0,0,$semestre[$data_filtre['semestre']][0],1, $data_filtre['annee'])));     
+                    break;
+                default:
+                    $bilans = $this->donObjetRepository->findByDate(array($mois_r), $year_r);
+                    $jour_balance = new DateTime(date('Y-m-d', mktime(0,0,0,$mois_r,1, $year_r)));     
+                    break;
+            }
+        }else { 
+            $jour_balance = new DateTime(date('Y-m-d', mktime(0,0,0,$mois_r,1, $year_r)));        
+            $bilans = $this->donObjetRepository->findByDate(array($mois_r), $year_r);
+        }
+
+        return $this->render('bilan_objet/index.html.twig', [
+            'bilan_objets' => $bilans,
+            'jour_balance' => $jour_balance,
+            'form_filtre' => $form_filtre->createView(),
+            'date_encours' => $date_encour,
+            'bilan_type' => $bilan_type,
+            'bilan_type_choix' => $bilan_type_choix,
+            'bilan_type_annee' => $bilan_type_annee
+        ]);
+
     }
 
     #[Route('/new', name: 'mouvement_new', methods: ['GET', 'POST'])]

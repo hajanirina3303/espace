@@ -6,9 +6,12 @@
 <section class="content col-12 ">
 <div class="card card-gray">
 <div class ="card-header">
-    <h3 align="center">DATE DON ET RENSEIGNEMENTS DONNATEUR</h3>
+    <h1 align="center">AJOUT OBJETS DON</h1>
 </div>
     <table class="table">
+<div>
+    <h5 align="center">DATE ET DONNATEUR</h5>
+</div>
         <tbody>
             <tr>
                 <th>Date</th>
@@ -17,23 +20,15 @@
                  <th>Adresse</th>               
             </tr>
             <tr>
-               <td>{{ do.dateObjet ? do.dateObjet|date('Y-m-d') : '' }}</td>
+               <td>{{ do.dateObjet ? do.dateObjet|date('d-m-Y') : '' }}</td>
                <td>{{ do.nomDonnateur }}</td>
                 <td>{{ do.numeroPhone }}</td>  
                 <td>{{ do.addresse }}</td>
             </tr>
         </tbody>
     </table>
-</div>
-</section>
-<section class="content col-12 ">
-<div class="card card-gray">
-<div class ="card-header">
-<h3 align="center"> OBJETS DONS</h3>
-</div>
+<h5 align="center"> OBJETS DONS</h5>
     {{ include('objet/_form.html.twig') }}
-</div>
-</section>
     <table class="table">
         <thead>
             <tr>
@@ -49,7 +44,7 @@
                <td>{{ objet.description }}</td>
                 <td>{{ objet.quantite }}</td>
                 <td>{{ objet.valeur }}</td>
-                <td>{{ objet.rubrique.refRubrique }}</td>
+                <td>{{ objet.rubrique.libelleRubrique }}</td>
             </tr>
         {% else %}
             <tr>
@@ -58,6 +53,7 @@
         {% endfor %}
         </tbody>
     </table>
+    </section>
 
-    <a href="{{ path('objet_index') }}">back to list</a>
+    <a href="{{ path('don_objet_index') }}">voir liste</a>
 {% endblock %}

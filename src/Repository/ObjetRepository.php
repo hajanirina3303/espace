@@ -22,8 +22,6 @@ class ObjetRepository extends ServiceEntityRepository
      public function findObjet()
     {
         return $this->createQueryBuilder('o')
-            ->andWhere('o.quantite < :rct')
-            ->setParameter('rct', 5000)
             ->getQuery()
             ->getResult()
         ;

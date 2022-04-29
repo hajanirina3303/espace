@@ -18,14 +18,14 @@
 		</div>
     
 <div class="card-body">
-    <table class="table">
+    <table id="example1" class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>Date du releve</th>
-                <th>Datedebut</th>
-                <th>Datefin</th>
-                <th>Montantdebut</th>
-                <th>Montantfin</th>
+                <th>Date debut</th>
+                <th>Date fin</th>
+                <th>Montant debut</th>
+                <th>Montant fin</th>
                 <th>Fichier</th>
                 <th>actions</th>
             </tr>
@@ -80,5 +80,256 @@
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-{% endblock %}
+
+		<script>
+			$(function () {
+
+$("#example1").DataTable().destroy();
+$("#example1").DataTable({
+"responsive": true,
+"lengthChange": false,
+"autoWidth": false,
+"ordering" : false,
+"language" :{
+	"search":"Rechercher :",
+	"info" : "Affichage de _START_ - _END_ / _TOTAL_ ",
+	"paginate": {"next" : "Suivant", "previous":"précédant"}
+},
+"columnDefs" : [{
+"targets" :2,
+"className":'text-right'
+},{
+"targets" :1,
+"className":"text-center"
+}
+],
+"buttons": [, "excel",{
+	extend :"pdfHtml5" ,
+	title:'',
+	text : "PDF",	
+        pageSize: 'LEGAL',
+        customize: function (doc){
+			console.log(doc.content);
+			doc.content = [
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : " COMMANDEMENT DE LA GENDARMERIE NATIONALE",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"REPOBLIKAN°I MADAGASIKARA",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "-------------------------",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"Fitiavana-Tanindrazana-Fandrosoana",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "DIRECTION DE LA GESTION DU PERSONNEL",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"------------------------",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "-------------------------",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "CENTRE D'ORPHELINAT DE LA GENDARMERIE NATIONALE",
+							"style" : ""	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"A Arivonimamo, le",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "--------------------------",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "40%",
+							"text" : "",
+							"style" : "center"	
+						},
+						{
+							"width" : "20%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"-",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "100%",
+							"text" : "LISTE DES POSITIONS BANCAIRE DU CENTRE D'ORPHELINAT DE LA GENDARMERIE",
+							"style" : "titre"	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "40%",
+							"text" : "",
+							"style" : "center"	
+						},
+						{
+							"width" : "20%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"-",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+			 doc.content
+			]
+			doc.styles = {
+				"center" :{
+					    "alignment": "center"
+						
+				},
+				"titre" :{
+					    "alignment": "center",
+						"bold": true,
+						"underline": true
+						
+				}, 
+				"table" : {
+					"alignment": "center"
+				},
+    "tableHeader": {
+        "bold": true,
+        "fontSize": 11,
+        "color": "white",
+        "fillColor": "#2d4154",
+        "alignment": "center"
+    },
+    "tableBodyEven": {
+		
+	},
+    "tableBodyOdd": {
+        "fillColor": "#f3f3f3"
+    },
+    "tableFooter": {
+        "bold": true,
+        "fontSize": 11,
+        "color": "white",
+        "fillColor": "#2d4154"
+    },
+    "title": {
+        "alignment": "center",
+        "fontSize": 15
+    },
+    "message": {}
+}
+			
+			}
+           
+}, 
+]
+}).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+});
+</script>
+	{% endblock %}
 {% endblock %}

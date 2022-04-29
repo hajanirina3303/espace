@@ -29,6 +29,11 @@ class SortieObjetType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $objets = array();
+        foreach ($this->objetRepository->findObjet() as $objet) {
+            if ($objet->getResteQuantite(0) > 0) // seul les quantites superieur à 0 sont affiché
+            array_push($objets, $objet);            
+        }
         $builder
             ->add('date_sortie', DateType::class,
             [
@@ -45,7 +50,7 @@ class SortieObjetType extends AbstractType
                 'class' => Objet::class,
                 'label'=>'Objet', 
                 'attr' => ['class' => 'form-control'],
-                'choices' => $this->objetRepository->findObjet(),
+                'choices' => $objets,
                 'choice_value' => function (?Objet $objet) {
                     return $objet!=null?$objet->getId():'';
                 },

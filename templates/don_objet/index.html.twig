@@ -8,7 +8,8 @@
       <div class="card-header">
     <h3 align = "center">ACQUIS OBJET DON</h3>
 </div>
-    <table class="table">
+</br>
+   <table id="example1" class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>Date</th>
@@ -19,7 +20,6 @@
                 <th>Quantite</th>
                 <th>Valeur</th>
                 <th>Total</th>
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -34,10 +34,6 @@
                 <td>{{ item.quantite }}</td>
                 <td>{{ item.Valeur }}</td>
                 <td>{{ item.quantite * item.Valeur }}</td>
-                <td>
-                    <a href="{{ path('don_objet_show', {'id': don_objet.id}) }}">show</a>
-                    <a href="{{ path('don_objet_edit', {'id': don_objet.id}) }}">edit</a>
-                </td>
             </tr>
         {% endfor %}
            
@@ -50,5 +46,278 @@
     </table>
 </div>
 </section>
+{% if is_granted('ROLE_EDITEUR') %}
     <a class=" btn btn-primary" href="{{ path('don_objet_new') }}">Ajouter</a>
+{% endif %}
+
+{% block script_supplement %}
+		<!-- ./wrapper -->
+		<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+		<!-- jQuery UI 1.11.4 -->
+		<script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+		<!-- DataTables  & Plugins -->
+		<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+		<script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
+		<script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
+		<script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+		<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+
+		<script>
+			$(function () {
+
+$("#example1").DataTable().destroy();
+$("#example1").DataTable({
+"responsive": true,
+"lengthChange": false,
+"autoWidth": false,
+"ordering" : false,
+"language" :{
+	"search":"Rechercher :",
+	"info" : "Affichage de _START_ - _END_ / _TOTAL_ ",
+	"paginate": {"next" : "Suivant", "previous":"précédant"}
+},
+"columnDefs" : [{
+"targets" :2,
+"className":'text-right'
+},{
+"targets" :1,
+"className":"text-center"
+}
+],
+"buttons": [, "excel",{
+	extend :"pdfHtml5" ,
+	title:'',
+	text : "PDF",	
+        pageSize: 'LEGAL',
+        customize: function (doc){
+			console.log(doc.content);
+			doc.content = [
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : " COMMANDEMENT DE LA GENDARMERIE NATIONALE",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"REPOBLIKAN°I MADAGASIKARA",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "-------------------------",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"Fitiavana-Tanindrazana-Fandrosoana",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "DIRECTION DE LA GESTION DU PERSONNEL",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"------------------------",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "-------------------------",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "CENTRE D'ORPHELINAT DE LA GENDARMERIE NATIONALE",
+							"style" : ""	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"A Arivonimamo, le",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "50%",
+							"text" : "--------------------------",
+							"style" : "center"	
+						},
+						{
+							"width" : "5%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "40%",
+							"text" : "",
+							"style" : "center"	
+						},
+						{
+							"width" : "20%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"-",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "100%",
+							"text" : "LISTE DES OBJETS DONS DU CENTRE D'ORPHELINAT DE LA GENDARMERIE",
+							"style" : "titre"	
+						}
+					]
+					
+				},
+				{
+					columns : [
+						{
+							"width" : "40%",
+							"text" : "",
+							"style" : "center"	
+						},
+						{
+							"width" : "20%",
+							"text" :"",
+							"style" : ""	
+						},
+						{
+							"width" : "45%",
+							"text" :"-",
+							"style" : "center" 	
+						}
+					]
+					
+				},
+			 doc.content
+			]
+			doc.styles = {
+				"center" :{
+					    "alignment": "center"
+						
+				},
+				"titre" :{
+					    "alignment": "center",
+						"bold": true,
+						"underline": true
+						
+				}, 
+				"table" : {
+					"alignment": "center"
+				},
+    "tableHeader": {
+        "bold": true,
+        "fontSize": 11,
+        "color": "white",
+        "fillColor": "#2d4154",
+        "alignment": "center"
+    },
+    "tableBodyEven": {
+		
+	},
+    "tableBodyOdd": {
+        "fillColor": "#f3f3f3"
+    },
+    "tableFooter": {
+        "bold": true,
+        "fontSize": 11,
+        "color": "white",
+        "fillColor": "#2d4154"
+    },
+    "title": {
+        "alignment": "center",
+        "fontSize": 15
+    },
+    "message": {}
+}
+			
+			}
+           
+}, 
+]
+}).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+});
+</script>
+	{% endblock %}
 {% endblock %}

@@ -19,6 +19,18 @@ class DonObjetRepository extends ServiceEntityRepository
         parent::__construct($registry, DonObjet::class);
     }
 
+    public function findbyDate($months, $year)
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('SUBSTRING(d.dateObjet,1,4) = :year AND SUBSTRING(d.dateObjet,6,2) IN (:months)')
+            ->setParameter('year', $year)
+            ->setParameter('months', $months)
+            ->orderBy('d.dateObjet', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return DonObjet[] Returns an array of DonObjet objects
     //  */

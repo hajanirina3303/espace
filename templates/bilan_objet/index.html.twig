@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BilanObjet index{% endblock %}
+
+{% block body %}
+
+{{ form_start(form_filtre,{attr: {class : 'col-12'} }) }}
+			<div class="col-12">
+				<div class="row">			
+					<div class="col-2">{{ form_label(form_filtre.type) }}{{ form_widget(form_filtre.type, []) }}</div>
+					<div class="col-2" id="mensuel">{{ form_label(form_filtre.mensuel) }}{{ form_widget(form_filtre.mensuel) }}</div>
+					<div class="col-2" id="trimestriel">{{ form_label(form_filtre.trimestriel) }}{{ form_widget(form_filtre.trimestriel) }}</div>
+					<div class="col-2" id="semestre">{{ form_label(form_filtre.semestre) }}{{ form_widget(form_filtre.semestre) }}</div>
+					<div class="col-2" id="annee" >{{ form_label(form_filtre.annee) }}{{ form_widget(form_filtre.annee) }}</div>
+					<div class="col-2">
+						<br>
+						<button class="btn btn-primary form-control">{{ button_label|default('Rechercher Bilan') }}</button>
+					</div>
+				</div>
+			</div>
+			{{ form_end(form_filtre) }}
+
+    <h1>BilanObjet index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Donnateur</th>
+                <th>Objet</th>
+                <th>Quantité</th>
+                <th>Reste</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+        {% for bilan_objet in bilan_objets %}
+        {% for item in bilan_objet.objets %}
+        
+            <tr>
+                <td>{{ bilan_objet.dateObjet|date('d-m-Y')  }}</td>
+                <td>{{ bilan_objet.nomDonnateur }}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.getQuantite() }}</td>
+                <td>{{ item.getResteQuantite(0) }}</td>
+                
+            </tr>
+           
+             {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="2">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <script src="{{ asset('plugins/jquery/jquery.min.js') }}"> </script>
+<script>
+    $("#filtre_bilan_type").val('');
+$("#filtre_bilan_mensuel").hide();
+        $("#filtre_bilan_trimestriel").hide();
+        $("#filtre_bilan_semestre").hide();
+        $("#filtre_bilan_annee").hide();
+
+$("#filtre_bilan_type").on('change',function(event) {
+    switch ($("#filtre_bilan_type").val()) {
+    case "Mensuel":
+        $("#filtre_bilan_mensuel").show();
+        $("#filtre_bilan_trimestriel").hide();
+        $("#filtre_bilan_semestre").hide();
+        $("#filtre_bilan_annee").show();
+        break;
+    case "Trimestriel":
+       $("#filtre_bilan_mensuel").hide();
+        $("#filtre_bilan_trimestriel").show();
+        $("#filtre_bilan_semestre").hide();
+        $("#filtre_bilan_annee").show();
+        break;
+    case "Semestriel":
+        $("#filtre_bilan_mensuel").hide();
+        $("#filtre_bilan_trimestriel").hide();
+        $("#filtre_bilan_semestre").show();
+        $("#filtre_bilan_annee").show();
+        break;
+     case "Annuel":
+        $("#filtre_bilan_mensuel").hide();
+        $("#filtre_bilan_trimestriel").hide();
+        $("#filtre_bilan_semestre").hide();
+        $("#filtre_bilan_annee").show();
+        break;
+
+    default:
+        $("#filtre_bilan_mensuel").hide();
+        $("#filtre_bilan_trimestriel").hide();
+        $("#filtre_bilan_semestre").hide();
+        $("#filtre_bilan_annee").hide();
+        break;
+}
+})
+
+		</script>
+{% endblock %}

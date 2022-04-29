@@ -8,24 +8,21 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
+               
                 <th>Description</th>
                 <th>Quantite</th>
                 <th>Valeur</th>
-                <th>actions</th>
+               
             </tr>
         </thead>
         <tbody>
         {% for objet in objets %}
             <tr>
-                <td>{{ objet.id }}</td>
+               
                 <td>{{ objet.description }}</td>
                 <td>{{ objet.quantite }}</td>
                 <td>{{ objet.valeur }}</td>
-                <td>
-                    <a href="{{ path('objet_show', {'id': objet.id}) }}">show</a>
-                    <a href="{{ path('objet_edit', {'id': objet.id}) }}">edit</a>
-                </td>
+                
             </tr>
         {% else %}
             <tr>
@@ -34,6 +31,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('objet_new') }}">Create new</a>
 {% endblock %}

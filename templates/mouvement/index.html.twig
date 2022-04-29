@@ -83,7 +83,7 @@
 							{% set j = mouvements|length - 1 - i %}
 
 							{% if mouvements[j].recette != null and mouvements[j].recette.don != null %}
-								<tr class="bg-warning">
+								<tr class="bg-fuchsia">
 									<td>{{ mouvements[j].datemouvement ? mouvements[j].datemouvement|date('d-m-Y') : '' }}</td>
 									<td>{{ mouvements[j].rubriqueRef.refrubrique }}</td>
 									<td>{{ mouvements[j].piece.numeropiece }}</td>
@@ -119,7 +119,7 @@
 									</td>
 								</tr>
 							{% else %}
-								<tr class="bg-danger">
+								<tr class="bg-warning">
 									<td>{{ mouvements[j].datemouvement ? mouvements[j].datemouvement|date('d-m-Y') : '' }}</td>
 									<td>{{ mouvements[j].rubriqueRef.refrubrique }}</td>
 									<td>{{ mouvements[j].piece.numeropiece }}</td>

@@ -19,7 +19,7 @@ class SortieObjetRepository extends ServiceEntityRepository
         parent::__construct($registry, SortieObjet::class);
     }
 
-   
+  
 
     // /**
     //  * @return SortieObjet[] Returns an array of SortieObjet objects

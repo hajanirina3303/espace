@@ -30,7 +30,7 @@ class Objet
     private $quantite;
 
     /**
-     * @ORM\Column(type="decimal", precision=20, scale=2)
+     * @ORM\Column(type="decimal", precision=20)
      */
     private $valeur;
 
