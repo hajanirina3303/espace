@@ -16,6 +16,7 @@ class BilanObjetController extends AbstractController
 {
     #[Route('/', name: 'bilan_objet_index', methods: ['GET'])]
     public function index(BilanObjetRepository $bilanObjetRepository): Response
+    
     {
         return $this->render('bilan_objet/index.html.twig', [
             'bilan_objets' => $bilanObjetRepository->findAll(),
